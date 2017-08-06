@@ -8,6 +8,12 @@
     "Maxim Malov <m.malov.v@gmail.com>"
   ],
   "license": "MIT License",
+  "keywords": [
+    "morse",
+    "encode",
+    "audio",
+    "stream"
+  ],
   "dependencies": {
     "async": "2.5.0",
     "audio-buffer-utils": "5.1.1",
