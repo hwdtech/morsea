@@ -1,0 +1,25 @@
+const pump = require('pump');
+const CharStream = require('../char-stream');
+const TextEncoder = require('../text-encoder');
+
+const argv = require('minimist')(process.argv.slice(2));
+const words = argv._;
+
+function usage() {
+  console.log('Usage: morse [options] [your text here as bare words]');
+  console.log('OPTIONS');
+  console.log('    --help prints this message');
+}
+
+if (!words.length || argv.help) {
+  usage();
+  process.exit(1);
+}
+
+const message = words.join(' ');
+
+pump(
+  CharStream.create(message),
+  TextEncoder.create(),
+  process.stdout
+);
