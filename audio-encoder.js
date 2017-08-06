@@ -31,14 +31,14 @@ class AudioEncoder extends AudioThrough {
   }
 
   _process(buffer, cb) {
-    super._process(this.encodeSymbol(buffer), cb);
+    super._process(this.prepareBuffer(buffer), cb);
   }
 
-  encodeSymbol(ch) {
+  prepareBuffer(ch) {
     return audioBufferUtils.concat([
       this.encodeSingleChar(ch.toString(), this),
       createAudioBuffer(this.unitDuration, 0, this.sampleRate)
-    ])
+    ]);
   }
 
   encodeSingleChar(ch) {
