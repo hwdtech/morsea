@@ -1,7 +1,7 @@
 {
   "name": "morsea",
   "version": "2.1.0",
-  "description": "",
+  "description": "Library for encoding morse code messages into text/audio",
   "main": "index.js",
   "author": "Alex Bukurov <abukurov@hwdtech.ru>",
   "contributors": [
