@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "author": "Alex Bukurov <abukurov@hwdtech.ru>",
+  "contributors": [
+    "Maxim Malov <m.malov.v@gmail.com>"
+  ],
+  "license": "MIT License",
   "dependencies": {
     "async": "2.5.0",
     "audio-buffer-utils": "5.1.1",
