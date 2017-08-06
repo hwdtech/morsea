@@ -4,7 +4,7 @@ Encode morse messages into text and audio streams!
 
 ## Installation
 
-`npm install hwdtech/morsea`
+`npm install morsea`
 
 ## Cli usage
 
