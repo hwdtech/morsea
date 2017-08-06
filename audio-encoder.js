@@ -2,18 +2,11 @@ const audioBufferUtils = require('audio-buffer-utils');
 const AudioThrough = require('audio-through');
 const symbols = require('./symbols');
 
-function createAudioBuffer(duration, frequency, sampleRate) {
-  const audioBuffer = audioBufferUtils.create(sampleRate * duration, 1, sampleRate);
-  audioBufferUtils.fill(audioBuffer, (value, i, channel) => Math.sin(2 * Math.PI * i * frequency / sampleRate));
-  return audioBuffer;
-}
-
 class AudioEncoder extends AudioThrough {
   static create(opts) {
     opts = Object.assign({
       frequency: 400,
-      unitDuration: 0.2,
-      sampleRate: 44100
+      unitDuration: 0.2
     }, opts);
 
     return new AudioEncoder(opts);
@@ -23,10 +16,10 @@ class AudioEncoder extends AudioThrough {
     super(opts);
 
     this.handlers = {
-      [symbols.DASH]: () => createAudioBuffer(this.unitDuration * 3, this.frequency, this.sampleRate),
-      [symbols.DOT]: () => createAudioBuffer(this.unitDuration, this.frequency, this.sampleRate),
-      [symbols.SPACE]: () => createAudioBuffer(this.unitDuration, 0, this.sampleRate),
-      'default': () => createAudioBuffer(0, this.frequency, this.sampleRate)
+      [symbols.DASH]: () => this.createOscillatorBuffer(this.unitDuration * 3, this.frequency),
+      [symbols.DOT]: () => this.createOscillatorBuffer(this.unitDuration, this.frequency),
+      [symbols.SPACE]: () => this.createOscillatorBuffer(this.unitDuration, 0),
+      'default': () => this.createOscillatorBuffer(0, this.frequency)
     }
   }
 
@@ -37,12 +30,18 @@ class AudioEncoder extends AudioThrough {
   prepareBuffer(ch) {
     return audioBufferUtils.concat([
       this.encodeSingleChar(ch.toString(), this),
-      createAudioBuffer(this.unitDuration, 0, this.sampleRate)
+      this.createOscillatorBuffer(this.unitDuration, 0)
     ]);
   }
 
   encodeSingleChar(ch) {
     return (this.handlers[ch] || this.handlers['default'])();
+  }
+
+  createOscillatorBuffer(duration, frequency) {
+    const audioBuffer = audioBufferUtils.create(this.format.sampleRate * duration, 1, this.format.sampleRate);
+    audioBufferUtils.fill(audioBuffer, (value, i, channel) => Math.sin(2 * Math.PI * i * frequency / this.format.sampleRate));
+    return audioBuffer;
   }
 }
 
