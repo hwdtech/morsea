@@ -1,48 +1,57 @@
-const audioBufferUtils = require('audio-buffer-utils');
-const AudioThrough = require('audio-through');
+const through2 = require('through2');
+const pcm = require('pcm-util');
+const audio = require('audio-buffer-utils');
 const symbols = require('./symbols');
 
-class AudioEncoder extends AudioThrough {
-  static create(opts) {
-    opts = Object.assign({
+class AudioBufferEncoder {
+
+  constructor(opts) {
+    this.opts = Object.assign({
+      sampleRate: 44100,
       frequency: 400,
       unitDuration: 0.2
     }, opts);
 
-    return new AudioEncoder(opts);
+    this.buffers = {
+      [symbols.DASH]: this.createOscillatorBuffer(this.opts.unitDuration * 3, this.opts.frequency),
+      [symbols.DOT]: this.createOscillatorBuffer(this.opts.unitDuration, this.opts.frequency),
+      [symbols.SPACE]: this.createOscillatorBuffer(this.opts.unitDuration, 0),
+      'default': this.createOscillatorBuffer(0, this.opts.frequency)
+    };
   }
 
-  constructor(opts) {
-    super(opts);
+  encode(buffer) {
+    const chars = buffer.toString('utf8');
 
-    this.handlers = {
-      [symbols.DASH]: () => this.createOscillatorBuffer(this.unitDuration * 3, this.frequency),
-      [symbols.DOT]: () => this.createOscillatorBuffer(this.unitDuration, this.frequency),
-      [symbols.SPACE]: () => this.createOscillatorBuffer(this.unitDuration, 0),
-      'default': () => this.createOscillatorBuffer(0, this.frequency)
+    const buffers = [];
+
+    for (let char of chars) {
+      buffers.push(this.encodeSingleChar(char, this.opts));
+      buffers.push(this.createOscillatorBuffer(this.opts.unitDuration, 0))
     }
-  }
 
-  _process(buffer, cb) {
-    super._process(this.prepareBuffer(buffer), cb);
-  }
+    const audioBuffer = audio.concat(...buffers);
 
-  prepareBuffer(ch) {
-    return audioBufferUtils.concat([
-      this.encodeSingleChar(ch.toString(), this),
-      this.createOscillatorBuffer(this.unitDuration, 0)
-    ]);
+    return Buffer.from(pcm.toArrayBuffer(audioBuffer));
   }
 
   encodeSingleChar(ch) {
-    return (this.handlers[ch] || this.handlers['default'])();
+    return (this.buffers[ch] || this.buffers['default']);
   }
 
   createOscillatorBuffer(duration, frequency) {
-    const audioBuffer = audioBufferUtils.create(this.format.sampleRate * duration, 1, this.format.sampleRate);
-    audioBufferUtils.fill(audioBuffer, (value, i, channel) => Math.sin(2 * Math.PI * i * frequency / this.format.sampleRate));
+    const audioBuffer = audio.create(this.opts.sampleRate * duration, 1, this.opts.sampleRate);
+    audio.fill(audioBuffer, (value, i, channel) => Math.sin(2 * Math.PI * i * frequency / this.opts.sampleRate));
     return audioBuffer;
   }
 }
 
-module.exports = AudioEncoder;
+module.exports = {
+  create(opts) {
+    const audioBufferEncoder = new AudioBufferEncoder(opts);
+
+    return through2(function (chunk, enc, cb) {
+      cb(null, audioBufferEncoder.encode(chunk));
+    });
+  }
+};

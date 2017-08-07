@@ -1,16 +1,16 @@
 /**
- * Usage node examples/morse-to-mp3 > test.mp3
+ * Usage node examples/morse-to-audio | aplay -f cd
  */
 const pump = require('pump');
-const lame = require('lame');
 const CharStream = require('../char-stream');
 const TextEncoder = require('../text-encoder');
 const AudioEncoder = require('../audio-encoder');
 
+const audioEncoder = AudioEncoder.create();
+
 pump(
-  CharStream.create('sos'),
+  CharStream.create('d'),
   TextEncoder.create(),
-  AudioEncoder.create(),
-  new lame.Encoder({ bitRate: 32 }),
+  audioEncoder,
   process.stdout
 );

@@ -1,16 +1,21 @@
 /**
- * Usage node examples/morse-to-mp3 > test.mp3
+ * Usage node examples/morse-to-ogg > test.ogg
  */
+const ogg = require('ogg');
+const opus = require('node-opus');
 const pump = require('pump');
-const lame = require('lame');
 const CharStream = require('../char-stream');
 const TextEncoder = require('../text-encoder');
 const AudioEncoder = require('../audio-encoder');
+
+const oggEncoder = new ogg.Encoder();
+
+pump(oggEncoder, process.stdout);
 
 pump(
   CharStream.create('sos'),
   TextEncoder.create(),
   AudioEncoder.create(),
-  new lame.Encoder({ bitRate: 32 }),
-  process.stdout
+  new opus.Encoder(48000, 2),
+  oggEncoder.stream()
 );
