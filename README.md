@@ -6,21 +6,6 @@ Encode morse messages into text and audio streams!
 
 `npm install morsea`
 
-## Cli usage
-
-```
-Usage: morse [options] [bare words here]
-Options:
-  --help prints this message
-```
-
-Example
-
-```
-node bin/morse sos
-.../---/.../%
-```
-
 ## API
 
 #### CharStream
