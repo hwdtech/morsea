@@ -15,7 +15,11 @@ pump(oggEncoder, process.stdout);
 pump(
   CharStream.create('sos'),
   TextEncoder.create(),
-  AudioEncoder.create(),
-  new opus.Encoder(48000, 2),
+  AudioEncoder.create({
+    frequency: 700,
+    unitDuration: 0.12,
+    sampleRate: 48000
+  }),
+  new opus.Encoder(),
   oggEncoder.stream()
 );
