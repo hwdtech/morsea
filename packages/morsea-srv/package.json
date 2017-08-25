@@ -1,0 +1,26 @@
+{
+  "name": "morsea-srv",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "start:dev": "micro-dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^3.0.1",
+    "limiter": "^1.1.2",
+    "micro": "^8.0.3",
+    "morsea": "^3.0.0",
+    "node-opus": "^0.2.6",
+    "ogg": "^1.2.5",
+    "pump": "^1.0.2"
+  },
+  "devDependencies": {
+    "micro-dev": "^1.2.1"
+  }
+}
