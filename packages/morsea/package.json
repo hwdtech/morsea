@@ -1,0 +1,35 @@
+{
+  "name": "morsea",
+  "version": "3.0.0",
+  "description": "Library for encoding morse code messages into text/audio",
+  "main": "index.js",
+  "author": "Alex Bukurov <abukurov@hwdtech.ru>",
+  "contributors": [
+    "Maxim Malov <m.malov.v@gmail.com>"
+  ],
+  "license": "MIT License",
+  "keywords": [
+    "morse",
+    "encode",
+    "audio",
+    "stream"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hwdtech/morsea"
+  },
+  "dependencies": {
+    "audio-buffer-utils": "5.1.1",
+    "morsify": "0.3.0",
+    "pcm-util": "^3.0.0",
+    "pump": "^1.0.2",
+    "readable-stream": "2.3.3",
+    "through2": "2.0.3"
+  },
+  "devDependencies": {
+    "express": "^4.15.4",
+    "lame": "^1.2.4",
+    "node-opus": "^0.2.6",
+    "ogg": "^1.2.5"
+  }
+}
